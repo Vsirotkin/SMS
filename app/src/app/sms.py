@@ -97,6 +97,9 @@ async def add_text_to_code(text: str, code: str) -> str:
     return f"{text} {code}"
 
 
+current_text_index = 0
+
+
 async def get_next_text(db: AsyncSession) -> str:
     """
     Получает следующий текст из таблицы textsms по очереди.
@@ -104,11 +107,15 @@ async def get_next_text(db: AsyncSession) -> str:
     :param db: Асинхронная сессия с базой данных.
     :return: Текст для добавления к сообщению.
     """
+    global current_text_index
     texts = await db.execute(select(TextSMS))
     texts = texts.scalars().all()
     if not texts:
         return ""
-    return texts[0].text
+
+    text = texts[current_text_index].text
+    current_text_index = (current_text_index + 1) % len(texts)
+    return text
 
 
 async def process_sms_buffer(db: AsyncSession):
