@@ -92,7 +92,7 @@ project/
 {
     "recipient": "89036003526",
     "text": "1234",
-    "password": "pokachtotakoy"
+    "password": "mysecretpassword"
 }
 ```
 
